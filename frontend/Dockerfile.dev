@@ -1,0 +1,23 @@
+# Development Dockerfile with hot reload support
+
+FROM node:22-alpine
+WORKDIR /app
+
+# Copy package.json only (same approach as production Dockerfile)
+COPY package.json ./
+
+# Use --force to resolve peer dependency conflicts (Angular major version upgrades)
+# postinstall script will automatically patch entities exports
+RUN npm install --force && npm cache clean --force
+
+# Copy source code
+COPY . .
+
+# Remove stale Angular cache from previous builds
+RUN rm -rf .angular/cache
+
+# Expose port
+EXPOSE 4200
+
+# Start development server with hot reload
+CMD ["npm", "start", "--", "--host", "0.0.0.0", "--poll", "2000"]

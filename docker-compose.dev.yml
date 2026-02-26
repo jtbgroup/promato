@@ -1,0 +1,79 @@
+name: promato-dev
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: promato-postgres-dev
+    environment:
+      POSTGRES_DB: promato
+      POSTGRES_USER: promato
+      POSTGRES_PASSWORD: promato
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U promato"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - promato-network
+
+  # Spring Boot Backend (hot reload via DevTools)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: promato-backend-dev
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/promato
+      - SPRING_DATASOURCE_USERNAME=promato
+      - SPRING_DATASOURCE_PASSWORD=promato
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+      - SPRING_FLYWAY_ENABLED=true
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    volumes:
+      - ./backend/src:/app/src:ro
+      - ./backend/pom.xml:/app/pom.xml:ro
+      - maven_cache:/root/.m2
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - promato-network
+
+  # Angular Frontend (hot reload)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: promato-frontend-dev
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend/src:/app/src:ro
+      - ./frontend/angular.json:/app/angular.json:ro
+      - ./frontend/tsconfig.json:/app/tsconfig.json:ro
+      - ./frontend/package.json:/app/package.json:ro
+      # node_modules intentionally excluded — must not override image-installed packages
+    depends_on:
+      - backend
+    networks:
+      - promato-network
+    command: npm start -- --host 0.0.0.0 --poll 2000
+
+volumes:
+  postgres_data_dev:
+    driver: local
+  maven_cache:
+    driver: local
+
+networks:
+  immocare-network:
+    driver: bridge

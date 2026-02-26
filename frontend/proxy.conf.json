@@ -1,0 +1,12 @@
+{
+  "/api": {
+    "target": "http://promato-backend-dev:8080",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/actuator": {
+    "target": "http://promato-backend-dev:8080",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

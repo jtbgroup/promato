@@ -1,0 +1,64 @@
+name: promato
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: promato-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: promato
+      POSTGRES_USER: promato
+      POSTGRES_PASSWORD: promato
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U promato"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - promato-network
+
+  # promato Application (Angular + Spring Boot + Nginx)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: promato-app
+    restart: unless-stopped
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: promato
+      DB_USER: promato
+      DB_PASSWORD: promato
+      SPRING_PROFILES_ACTIVE: production
+    volumes:
+      - app_logs:/var/log/nginx
+    ports:
+      - "8090:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - promato-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+
+volumes:
+  postgres_data:
+    driver: local
+  app_logs:
+    driver: local
+
+networks:
+  immocare-network:
+    driver: bridge
