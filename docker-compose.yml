@@ -60,5 +60,5 @@ volumes:
     driver: local
 
 networks:
-  immocare-network:
+  promato-network:
     driver: bridge
