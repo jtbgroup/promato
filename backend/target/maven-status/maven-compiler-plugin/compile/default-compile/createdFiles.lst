@@ -1,0 +1,8 @@
+com/promato/PromatoApplication.class
+com/promato/controller/AuthController.class
+com/promato/security/AppUserDetailsService.class
+com/promato/repository/AppUserRepository.class
+com/promato/config/SecurityConfig.class
+com/promato/user/AppUser.class
+com/promato/model/dto/LoginRequest.class
+com/promato/model/dto/UserDto.class
