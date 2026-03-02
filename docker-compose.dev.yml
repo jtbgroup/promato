@@ -55,7 +55,7 @@ services:
       dockerfile: Dockerfile.dev
     container_name: promato-frontend-dev
     ports:
-      - "4300:4200"
+      - "4300:4300"
     volumes:
       - ./frontend/src:/app/src:ro
       - ./frontend/angular.json:/app/angular.json:ro

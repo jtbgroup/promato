@@ -54,7 +54,7 @@ start: ## ▶  Start dev environment WITHOUT rebuild (daily use)
 	@echo "Starting dev environment..."
 	docker compose -f docker-compose.dev.yml up -d
 	@echo "✓ Dev environment started (no rebuild)"
-	@echo "  Frontend : http://localhost:4200"
+	@echo "  Frontend : http://localhost:4300"
 	@echo "  Backend  : http://localhost:8080"
 
 stop: ## ⏹  Stop dev environment
@@ -66,7 +66,7 @@ dev-build: ## 🔨 Rebuild dev images (only after pom.xml / package.json changes
 	@echo "Rebuilding dev images..."
 	docker compose -f docker-compose.dev.yml up -d --build
 	@echo "✓ Dev images rebuilt and started"
-	@echo "  Frontend : http://localhost:4200"
+	@echo "  Frontend : http://localhost:4300"
 	@echo "  Backend  : http://localhost:8080"
 
 logs-dev: ## View dev logs
@@ -80,7 +80,7 @@ dev: ## Start in development mode with logs visible (rebuilds — use 'start' fo
 dev-d: ## Start in development mode detached (rebuilds — use 'start' for daily use)
 	docker compose -f docker-compose.dev.yml up -d --build
 	@echo "✓ Dev services started"
-	@echo "  Frontend : http://localhost:4200"
+	@echo "  Frontend : http://localhost:4300"
 	@echo "  Backend  : http://localhost:8080"
 
 dev-down: ## Stop development services

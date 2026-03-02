@@ -1,0 +1,8 @@
+/home/gautier/git/promato/backend/src/main/java/com/promato/PromatoApplication.java
+/home/gautier/git/promato/backend/src/main/java/com/promato/config/SecurityConfig.java
+/home/gautier/git/promato/backend/src/main/java/com/promato/controller/AuthController.java
+/home/gautier/git/promato/backend/src/main/java/com/promato/model/dto/LoginRequest.java
+/home/gautier/git/promato/backend/src/main/java/com/promato/model/dto/UserDto.java
+/home/gautier/git/promato/backend/src/main/java/com/promato/repository/AppUserRepository.java
+/home/gautier/git/promato/backend/src/main/java/com/promato/security/AppUserDetailsService.java
+/home/gautier/git/promato/backend/src/main/java/com/promato/user/AppUser.java

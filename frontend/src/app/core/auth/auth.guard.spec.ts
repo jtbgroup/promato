@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { authGuard } from './auth.guard';
-import { AuthService, UserDto } from './auth.service';
+import { AuthService, UserDto } from '../../../auth.service';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 const mockUser: UserDto = { id: 1, username: 'admin', email: 'admin@promato.local', role: 'ADMIN' };
