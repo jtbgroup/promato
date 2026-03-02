@@ -2,11 +2,12 @@
 
 | File | Description |
 |------|-------------|
-| 01-functional-analysis.md | Application overview, roles, functional domains, NFRs |
-| 02-use-cases.md | Detailed use case descriptions (UC-01 to UC-09) |
-| 03-user-stories.md | User stories by domain (US-001 to US-052) |
-| 04-data-model.md | Full data model — entities, columns, relationships |
-| 05-regeneration-prompt.md | AI prompt to regenerate the application from scratch |
+| doc/analysis/roles.md | Roles definition and access matrix |
+| doc/analysis/data-model.md | Full data model — entities, columns, relationships |
+| doc/analysis/use-cases/UC-XX-*.md | One file per use case |
+| doc/analysis/user-stories/US-XXX-*.md | One file per user story |
+| doc/analysis/prompts/project instructions.md | AI prompt to regenerate the application from scratch |
+| doc/analysis/prompts/UC-XX-*-prompt.md | AI prompt per use case |
 
 ## Architecture Summary
 
@@ -16,9 +17,9 @@
 ```
 
 ### Dev environment
-- Frontend: http://localhost:4200 (Angular dev server, hot reload)
-- Backend: http://localhost:8080 (Spring Boot DevTools, hot reload)
-- DB: localhost:5432
+- Frontend: http://localhost:4300 (Angular dev server, hot reload)
+- Backend:  http://localhost:8080 (Spring Boot DevTools, hot reload)
+- DB:       localhost:5432
 
 ### Production
 - App: http://localhost:8090 (Nginx serves Angular + proxies /api/ to Spring Boot)

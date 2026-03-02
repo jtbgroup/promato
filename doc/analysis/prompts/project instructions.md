@@ -10,9 +10,11 @@ Use this prompt to regenerate the full application skeleton from scratch with an
 You are helping me build "Promato", a web-based project management application.
 
 **Stack:**
-- Backend: Java 21, Spring Boot 3, Spring Security (session-based auth, BCrypt), Spring Data JPA, Flyway, PostgreSQL 17
-- Frontend: Angular 19, Angular Material, standalone components, lazy-loaded feature modules
-- Infrastructure: Docker Compose (dev + prod environments), Nginx reverse proxy, multi-stage Dockerfile
+- Backend: Java 21+, Spring Boot 3+, Spring Security (session-based auth, BCrypt 12), Spring Data JPA, Flyway, PostgreSQL 17+
+- Frontend: Angular 19+, Angular Material, standalone components, lazy-loaded feature modules
+- Infrastructure: Docker Compose with two separate environments:
+    - docker-compose.dev.yml: development with hot reload (frontend on port 4300, backend on port 8080)
+    - docker-compose.yml: production with multi-stage Dockerfile (app on port 8090)
 
 **Application purpose:**
 Promato allows teams to manage projects by:
@@ -23,17 +25,29 @@ Promato allows teams to manage projects by:
 
 **Users & Roles (system-level):** ADMIN, PROJECT_MANAGER, MEMBER, READER
 **Project-level roles:** PROJECT_MANAGER, MEMBER, READER
+**Roles are defined with their full access matrix in:** `doc/analysis/roles.md`
 
-**Authentication:** Phase 1 = session-based DB auth. Phase 2 = OAuth2/Keycloak (security layer must be designed to accommodate this).
+**Authentication:** Phase 1 = session-based DB auth. Phase 2 = OAuth2/Keycloak.
+The Spring Security config MUST be structured so switching to OAuth2/Keycloak only requires
+adding the resource server starter and swapping the SecurityFilterChain bean — no other changes.
 
-**Database schema (PostgreSQL, managed by Flyway):**
-- V001: app_user (id, username, password_hash, email, role, active, created_at, updated_at)
-- V002: project (id, code UNIQUE, name, description, status CHECK DRAFT/ACTIVE/ARCHIVED, start_date, planned_end_date, budget, created_by FK, timestamps), project_member (id, project_id FK, user_id FK, project_role CHECK PM/MEMBER/READER, joined_at, UNIQUE project+user)
-- V003: pbs_node (id, project_id FK, parent_id FK self-ref nullable, code, title, description, node_type CHECK DELIVERABLE/TASK/MILESTONE, estimated_effort, status CHECK NOT_STARTED/IN_PROGRESS/DONE/BLOCKED, sort_order, timestamps), pbs_node_assignee (pbs_node_id, user_id, PK composite)
-- V004: time_entry (id, pbs_node_id FK, user_id FK, entry_date, duration_hours CHECK >0, comment, timestamps)
-- V005: user_journey (id, project_id FK, title, description, show_progress boolean, created_by FK, timestamps), journey_step (id, journey_id FK, step_number, actor, action, system_response, expected_result, pbs_node_id FK nullable, created_at, UNIQUE journey+step_number)
-- V006: hlr (id, project_id FK UNIQUE, purpose, scope, generated_at, updated_at), hlr_requirement (id, hlr_id FK, req_type CHECK FUNCTIONAL/NON_FUNCTIONAL, code, title, description, source_pbs_node_id FK nullable, sort_order, timestamps)
-- V007: default admin user (username=admin, password=Admin1234!)
+**Database schema (PostgreSQL 17, managed by Flyway):**
+- V001: app_user (id, username, password_hash, email, role, active, created_at, updated_at) — UC-01
+- V002: project, project_member — UC-03
+- V003: pbs_node (recursive self-ref tree, parent_id nullable), pbs_node_assignee — UC-04
+- V004: time_entry — UC-05
+- V005: user_journey, journey_step — UC-07
+- V006: hlr, hlr_requirement — UC-08
+- V007: default admin user (username=admin, password=Admin1234!, BCrypt 12) — UC-01
+
+Each Flyway migration is traceable to a use case (SQL header comment: -- Use case: UC-XX).
+
+**Documentation structure:**
+- Each use case lives in its own file: `doc/analysis/use-cases/UC-XX-<slug>.md`
+- Each user story lives in its own file: `doc/analysis/user-stories/US-XXX-<slug>.md`
+- Roles and access matrix: `doc/analysis/roles.md`
+- Data model: `doc/analysis/data-model.md`
+- Each UC has a dedicated generation prompt: `doc/analysis/prompts/UC-XX-<slug>-prompt.md`
 
 **What to generate:**
 [Specify what you need — entities, repositories, services, controllers, Angular components, etc.]
@@ -49,3 +63,5 @@ Promato allows teams to manage projects by:
 - Angular services use `environment.apiUrl` (currently `/api/v1`) for all API calls
 - PDF export is server-side (Spring Boot generates PDF from HLR/Journey data)
 - All entities have `created_at` / `updated_at` with `@PreUpdate` hook
+- Dev frontend accessible at **http://localhost:4300**
+- All generated code and documentation must be in **English**

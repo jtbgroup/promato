@@ -3,7 +3,7 @@ name: promato-dev
 services:
   # PostgreSQL Database
   postgres:
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     container_name: promato-postgres-dev
     environment:
       POSTGRES_DB: promato
@@ -48,14 +48,14 @@ services:
     networks:
       - promato-network
 
-  # Angular Frontend (hot reload)
+  # Angular Frontend (hot reload) — accessible at http://localhost:4300
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
     container_name: promato-frontend-dev
     ports:
-      - "4200:4200"
+      - "4300:4200"
     volumes:
       - ./frontend/src:/app/src:ro
       - ./frontend/angular.json:/app/angular.json:ro
