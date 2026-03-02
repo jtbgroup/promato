@@ -1,6 +1,5 @@
 package com.promato.controller;
 
-import com.promato.user.AppUserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -13,6 +12,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
+
+import com.promato.model.dto.LoginRequest;
+import com.promato.model.dto.UserDto;
+import com.promato.repository.AppUserRepository;
 
 import java.util.Map;
 

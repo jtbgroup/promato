@@ -1,8 +1,8 @@
-package com.promato.security;
+package com.promato.service;
 
+import com.promato.repository.AppUserRepository;
 import com.promato.security.AppUserDetailsService;
 import com.promato.user.AppUser;
-import com.promato.user.AppUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
